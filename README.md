@@ -1,3 +1,11 @@
+<div style="padding: 15px; border-left: 6px solid #ffcc00; background-color: #fff9e6; color: #664d00; margin: 20px 0; border-radius: 4px; font-family: sans-serif;">
+  <strong style="font-size: 1.1em;">⚠️ Warnung: Projekt in Entwicklung</strong>
+  <p style="margin: 8px 0 0 0; line-height: 1.5;">
+    Dieses Projekt befindet sich aktuell in der Entwicklungsphase. 
+    Die Angaben in dieser README-Datei entsprechen nicht dem aktuellen Stand.
+  </p>
+</div>
+
 # Store & Forward Gateway
 
 A modern Store & Forward platform built with **Electron** and **React**, designed for industrial automation, IoT, and edge computing environments. The application reliably collects data from OPC UA servers and MQTT brokers, buffers data locally, and forwards it to various database systems without data loss.
