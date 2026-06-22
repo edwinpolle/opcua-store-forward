@@ -1,0 +1,112 @@
+import { OPCUAServer } from "node-opcua-server/dist";
+import { OpcuaServerConfig } from "../../models/opcua-server/opcua-server-config.entity";
+import {
+  AddressSpace,
+  DataType,
+  MessageSecurityMode,
+  Namespace,
+  SecurityPolicy,
+  UAMethod,
+  UAObject,
+} from "node-opcua/dist";
+
+export class OpcuaServer {
+  server: OPCUAServer | undefined;
+  config: OpcuaServerConfig;
+  addressSpace: AddressSpace | undefined;
+  namespace: Namespace | undefined;
+  object: UAObject | undefined;
+  method: UAMethod | undefined;
+
+  constructor(config: OpcuaServerConfig) {
+    this.config = config;
+  }
+
+  createServer() {
+    this.server = new OPCUAServer({
+      port: this.config.port | 4840,
+      securityModes: this.getSecurityMode(),
+      securityPolicies: this.getSecurityPolicies(),
+      allowAnonymous: this.getAnonymousState(),
+    });
+  }
+
+  async initServer() {
+    if (!this.server) return Error("No server defined!");
+
+    await this.server.initialize();
+  }
+
+  setAddressSapce() {
+    if (!this.server) return Error("No server defined!");
+
+    const addressSpace = this.server.engine.addressSpace;
+
+    if (!addressSpace) return Error("No address space defined");
+
+    this.namespace = addressSpace.registerNamespace(this.config.namespace);
+  }
+
+  getSecurityMode(): MessageSecurityMode[] {
+    return [
+      MessageSecurityMode[
+        this.config.securityMode as keyof typeof MessageSecurityMode
+      ],
+    ];
+  }
+
+  getSecurityPolicies(): SecurityPolicy[] {
+    return [
+      SecurityPolicy[this.config.securityPolicy as keyof typeof SecurityPolicy],
+    ];
+  }
+
+  getAnonymousState(): boolean {
+    if (
+      MessageSecurityMode[
+        this.config.securityMode as keyof typeof MessageSecurityMode
+      ] === MessageSecurityMode.None
+    )
+      return true;
+
+    return false;
+  }
+  setObject() {
+    this.object = this.namespace?.addObject({
+      organizedBy: this.addressSpace?.rootFolder.objects,
+      browseName: "",
+    });
+  }
+
+  setMethod() {
+    if (!this.object) return Error("No Object defined!");
+
+    this.method = this.namespace?.addMethod(this.object, {
+      browseName: "",
+      inputArguments: methodBuilder(this.config.methodInputArguments),
+      outputArguments: [
+        {
+          name: "Result",
+          dataType: DataType.Boolean,
+          description: {
+            text: "Boolean result if data was sucessfull insert to database.",
+          },
+        },
+      ],
+    });
+  }
+
+  bindMethod() {
+    if (!this.method) return Error("No Method defined!");
+
+    this.method.bindMethod((inputArguments, context, callback) => {
+      callback(null, {});
+    });
+  }
+
+  shutdownServer() {
+    if (!this.server) return Error("No server defined!");
+
+    this.server.shutdown();
+  }
+}

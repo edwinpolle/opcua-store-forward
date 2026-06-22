@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "allowJs": true,
+    "module": "commonjs",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "baseUrl": "./",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "paths": { "*": ["node_modules/*"], "src/*": ["src/*"] },
+    "lib": ["DOM", "ESNext"],
+    "types": ["node"]
+  },
+  "include": ["src/**/*", "src/frontend/global.d.ts"]
+}
