@@ -4,6 +4,7 @@ import { NewOpcuaMethodModal } from "./modals/new-opcua-method-modal";
 import { useOpcuaServerBound } from "../../services/opcua-server.service";
 import { useTooltip } from "../../../../helper/tooltip-helper";
 import { EditOpcuaObjectModal } from "./modals/edit-opcua-object-modal";
+import { OrderOpcuaMethodModal } from "./modals/order-opcua-method-modal";
 
 type Props = {
   id: string;
@@ -12,14 +13,20 @@ type Props = {
 export function OpcuaObjectListItem({ id }: Props) {
   const [showNewModal, setNewModal] = useState<boolean>(false);
   const [showEditModal, setEditModal] = useState<boolean>(false);
+  const [showReorderMethodModal, setReorderMethodModal] =
+    useState<boolean>(false);
 
   const newButtonRef = useRef<HTMLButtonElement | null>(null);
   const newInlineButtonRef = useRef<HTMLButtonElement | null>(null);
   const editButtonRef = useRef<HTMLButtonElement | null>(null);
+  const orderButtonRef = useRef<HTMLButtonElement | null>(null);
 
-  [newButtonRef, newInlineButtonRef, editButtonRef].forEach(useTooltip);
+  [newButtonRef, newInlineButtonRef, editButtonRef, orderButtonRef].forEach(
+    useTooltip,
+  );
 
-  const { getMethodByObjectId, setObject, setMethod } = useOpcuaServerBound();
+  const { getMethodByObjectId, setObject, setMethod, updateMethod } =
+    useOpcuaServerBound();
 
   const object = useOpcuaServerBound((s) => s.getObjectById(id));
 
@@ -57,6 +64,17 @@ export function OpcuaObjectListItem({ id }: Props) {
           >
             <i className="bi bi-plus"></i>
           </button>
+
+          <button
+            ref={orderButtonRef}
+            className="btn btn-warning"
+            data-bs-toogle="tooltip"
+            data-bs-placement="top"
+            title="Order Methods"
+            onClick={() => setReorderMethodModal(true)}
+          >
+            <i className="bi bi-list"></i>
+          </button>
         </div>
       </div>
       <hr className="divider mt-2 mb-2"></hr>
@@ -80,15 +98,17 @@ export function OpcuaObjectListItem({ id }: Props) {
       ) : (
         <>
           <ul className="list-group">
-            {getMethodByObjectId(id).map((v) => (
-              <li
-                id={v.id}
-                key={v.id}
-                className="list-group-item list-group-item-warning d-flex flex-column pt-2 pb-2 ps-2"
-              >
-                <OpcuaMethodListItem id={v.id}></OpcuaMethodListItem>
-              </li>
-            ))}
+            {getMethodByObjectId(id)
+              .sort((a, b) => a.order - b.order)
+              .map((v) => (
+                <li
+                  id={v.id}
+                  key={v.id}
+                  className="list-group-item list-group-item-warning d-flex flex-column pt-2 pb-2 ps-2"
+                >
+                  <OpcuaMethodListItem id={v.id}></OpcuaMethodListItem>
+                </li>
+              ))}
           </ul>
         </>
       )}
@@ -111,6 +131,16 @@ export function OpcuaObjectListItem({ id }: Props) {
           onClose={() => setEditModal(false)}
           onUpdate={setObject}
         ></EditOpcuaObjectModal>
+      )}
+
+      {showReorderMethodModal && object && (
+        <OrderOpcuaMethodModal
+          data={getMethodByObjectId(object.id)}
+          onClose={() => setReorderMethodModal(false)}
+          onUpdate={(dto) => {
+            updateMethod(dto);
+          }}
+        ></OrderOpcuaMethodModal>
       )}
     </>
   );

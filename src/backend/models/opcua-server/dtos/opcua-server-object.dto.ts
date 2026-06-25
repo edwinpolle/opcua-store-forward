@@ -6,6 +6,6 @@ export interface OpcuaServerObjectDto {
   object: string;
   createAt: Date;
   updateAt: Date;
-  methods: OpcuaServerMethodDto[];
+  methods?: OpcuaServerMethodDto[];
   namespaceId: string;
 }

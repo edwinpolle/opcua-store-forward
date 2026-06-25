@@ -1,12 +1,5 @@
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { OpcuaServerInputArgumentDto } from "../../../../../../backend/models/opcua-server/dtos/opcua-server-input-argument.dto";
 import { useState } from "react";
+import { OpcuaServerMethodDto } from "../../../../../../backend/models/opcua-server/dtos/opcua-server-method.dto";
 import {
   closestCenter,
   DndContext,
@@ -16,20 +9,23 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 type Props = {
-  data: OpcuaServerInputArgumentDto[];
+  data: OpcuaServerMethodDto[];
   onClose: () => void;
-  onUpdate: (dtos: OpcuaServerInputArgumentDto) => void;
+  onUpdate: (dtos: OpcuaServerMethodDto) => void;
 };
 
-export function OrderOpcuaInputArgumentModal({
-  data,
-  onClose,
-  onUpdate,
-}: Props) {
-  const [items, setItems] = useState<OpcuaServerInputArgumentDto[]>(data);
+export function OrderOpcuaMethodModal({ data, onClose, onUpdate }: Props) {
+  const [items, setItems] = useState<OpcuaServerMethodDto[]>(data);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -38,7 +34,7 @@ export function OrderOpcuaInputArgumentModal({
     }),
   );
 
-  function SortableItem({ item }: { item: OpcuaServerInputArgumentDto }) {
+  function SortableItem({ item }: { item: OpcuaServerMethodDto }) {
     const {
       attributes,
       listeners,
@@ -69,9 +65,9 @@ export function OrderOpcuaInputArgumentModal({
     );
   }
 
-  function updateInputArgument() {
+  function updateMethod() {
     items.forEach((v) => {
-      window.api.updateOpcuaServerInputArgument(v.id, v).then((result) => {
+      window.api.updateOpcuaServerMethod(v.id, v).then((result) => {
         onUpdate(result);
       });
     });
@@ -107,7 +103,7 @@ export function OrderOpcuaInputArgumentModal({
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <span className="modal-title">Reorder Input Arguments</span>
+              <span className="modal-title">Reorder Methods</span>
               <button className="btn-close" onClick={() => onClose()}></button>
             </div>
             <div className="modal-body">
@@ -135,7 +131,7 @@ export function OrderOpcuaInputArgumentModal({
             <div className="modal-footer">
               <button
                 className="btn btn-success"
-                onClick={() => updateInputArgument()}
+                onClick={() => updateMethod()}
               >
                 Save
               </button>

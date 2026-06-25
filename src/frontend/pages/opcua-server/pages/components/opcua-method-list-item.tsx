@@ -57,6 +57,7 @@ export function OpcuaMethodListItem({ id }: Props) {
               ? `${getInputArgumetsByMethodId(id).length} Inputs`
               : `1 Input`}
           </span>
+
           <button
             ref={newButtonRef}
             className="btn btn-info"

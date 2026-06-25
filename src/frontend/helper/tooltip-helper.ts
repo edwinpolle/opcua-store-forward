@@ -10,6 +10,7 @@ export function useTooltip(ref: React.RefObject<HTMLButtonElement | null>) {
         show: 400,
         hide: 100,
       },
+      trigger: "hover",
     });
 
     return () => tooltip.dispose();

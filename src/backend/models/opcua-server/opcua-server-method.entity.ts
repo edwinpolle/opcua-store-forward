@@ -22,6 +22,9 @@ export class OpcuaServerMethod {
   @Column()
   description!: string;
 
+  @Column({ default: 0 })
+  order!: number;
+
   @CreateDateColumn()
   createAt!: Date;
 

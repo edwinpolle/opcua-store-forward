@@ -220,7 +220,7 @@ export function OpcuaServerDetail() {
                               scrollToId(e, document, n.id);
                             }}
                             href="#"
-                            className="nav-link bg-primary-subtle text-primary-emphasis border border-primary-subtle"
+                            className="nav-link my-1 bg-primary-subtle text-primary-emphasis border border-primary-subtle"
                           >
                             {n.name}
                           </a>
@@ -241,18 +241,20 @@ export function OpcuaServerDetail() {
 
                                   {getMethodByObjectId(o.id).length > 0 ? (
                                     <nav className="nav nav-pills flex-column">
-                                      {getMethodByObjectId(o.id).map((m) => (
-                                        <a
-                                          key={m.id}
-                                          onClick={(e) => {
-                                            scrollToId(e, document, m.id);
-                                          }}
-                                          href="#"
-                                          className="nav-link ms-5 my-1 bg-warning-subtle text-warning-emphasis border border-warning-subtle"
-                                        >
-                                          {m.name}
-                                        </a>
-                                      ))}
+                                      {getMethodByObjectId(o.id)
+                                        .sort((a, b) => a.order - b.order)
+                                        .map((m) => (
+                                          <a
+                                            key={m.id}
+                                            onClick={(e) => {
+                                              scrollToId(e, document, m.id);
+                                            }}
+                                            href="#"
+                                            className="nav-link ms-5 my-1 bg-warning-subtle text-warning-emphasis border border-warning-subtle"
+                                          >
+                                            {m.name}
+                                          </a>
+                                        ))}
                                     </nav>
                                   ) : (
                                     <></>

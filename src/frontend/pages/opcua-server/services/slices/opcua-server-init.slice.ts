@@ -22,15 +22,21 @@ export const createOpcuaServerInitSlice: StateCreator<
     set({ opcuaServer: dto });
 
     dto.namespaces.forEach((namespace) => {
-      get().setNamespace(namespace);
+      const { objects, ...namespaceW } = namespace;
 
-      namespace.objects.forEach((object) => {
-        get().setObject(object);
+      get().setNamespace({ ...namespaceW });
 
-        object.methods.forEach((method) => {
-          get().setMethod(method);
+      namespace.objects!.forEach((object) => {
+        const { methods, ...objectW } = object;
 
-          method.inputArguments.forEach((inputArgument) => {
+        get().setObject({ ...objectW });
+
+        object.methods!.forEach((method) => {
+          const { inputArguments, ...methodW } = method;
+
+          get().setMethod({ ...methodW });
+
+          method.inputArguments!.forEach((inputArgument) => {
             get().setInputArgument(inputArgument);
           });
         });

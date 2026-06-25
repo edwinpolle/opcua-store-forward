@@ -4,8 +4,9 @@ export interface OpcuaServerMethodDto {
   id: string;
   name: string;
   description: string;
+  order: number;
   createAt: Date;
   updateAt: Date;
-  inputArguments: OpcuaServerInputArgumentDto[];
+  inputArguments?: OpcuaServerInputArgumentDto[];
   objectId: string;
 }
