@@ -3,6 +3,7 @@
   <p style="margin: 8px 0 0 0; line-height: 1.5;">
     Dieses Projekt befindet sich aktuell in der Entwicklungsphase. 
     Die Angaben in dieser README-Datei entsprechen nicht dem aktuellen Stand.
+    Diese diente nur zur inspiration und ist KI generiert!
   </p>
 </div>
 
