@@ -37,6 +37,5 @@ export const createAutostartSlice: StateCreator<
   initAutostart: async () => {
     const result = await window.api.getAutostartState();
     set({ autostart: result });
-    console.log(result);
   },
 });

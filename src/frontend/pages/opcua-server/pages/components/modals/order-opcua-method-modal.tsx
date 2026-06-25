@@ -122,7 +122,7 @@ export function OrderOpcuaMethodModal({ data, onClose, onUpdate }: Props) {
                         return a.order - b.order;
                       })
                       .map((v) => (
-                        <SortableItem item={v}></SortableItem>
+                        <SortableItem key={v.id} item={v}></SortableItem>
                       ))}
                   </SortableContext>
                 </div>

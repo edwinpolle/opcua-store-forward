@@ -9,5 +9,5 @@ export interface OpcuaServerDto {
   securityPolicy: string;
   createAt: Date;
   updateAt: Date;
-  namespaces: OpcuaServerNamespaceDto[];
+  namespaces?: OpcuaServerNamespaceDto[];
 }

@@ -1,16 +1,15 @@
-import { OpcuaServerConfig } from "../../models/opcua-server/opcua-server-config.entity";
 import { app } from "electron";
 import path from "path";
 import { singleton } from "tsyringe";
 import { DataSource } from "typeorm";
 import { MsSQLConfig } from "../mssql/models/mssql-config.entity";
 import { MySQLConfig } from "../mysql/models/mysql.entity";
-import { OpcuaServerMethod } from "../../models/opcua-server/opcua-server-method.entity";
-import { OpcuaServerNamespace } from "../../models/opcua-server/opcua-server-namespace.entity";
-import { OpcuaServerObject } from "../../models/opcua-server/opcua-server-object.entity";
-import { OpcuaServerMethodInputArgument } from "../../models/opcua-server/opcua-server-input-argument.entity";
 import { OpcuaServerEntities } from "../../models/opcua-server/opcua-server-entities";
 import { BufferEntities } from "../../models/buffer/buffer-entities";
+import { SettingsEntities } from "../../models/settings/settings-entities";
+import { SettingsProfileDto } from "../../models/settings/dtos/settings.dto";
+import { CreateSettingsProfile } from "../../models/settings/dtos/create-settings-profile.dto";
+import { SettingsProfile } from "../../models/settings/settings-profile.entity";
 
 @singleton()
 export class SqliteService {
@@ -26,11 +25,38 @@ export class SqliteService {
       entities: [
         MsSQLConfig,
         MySQLConfig,
+        ...SettingsEntities,
         ...OpcuaServerEntities,
         ...BufferEntities,
       ],
     });
 
-    this.dataSource.initialize();
+    this.initilizeDataSource();
+  }
+
+  async initilizeDataSource() {
+    try {
+      await this.dataSource.initialize();
+
+      await this.seedDefaultValues();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async seedDefaultValues() {
+    const repo = this.dataSource.getRepository(SettingsProfile);
+
+    const defaultProfile: CreateSettingsProfile = {
+      name: "Default",
+      autostart: false,
+      theme: "dark",
+    };
+
+    const exists = await repo.findOne({ where: { name: "Default" } });
+
+    if (!exists) {
+      await repo.save(defaultProfile);
+    }
   }
 }

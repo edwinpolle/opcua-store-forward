@@ -6,8 +6,12 @@ export function Database() {
 
   return (
     <>
-      <div className="flex-grow-1 d-flex flex-column">
-        <div className="d-flex flex-row gap-2 p-2 align-items-center">
+      <div className="flex-grow-1 d-flex flex-column align-items-center justify-content-center">
+        <span>Database</span>
+        <span>coming soon...</span>
+      </div>
+      {/**
+         *         <div className="d-flex flex-row gap-2 p-2 align-items-center">
           <span className="fs-5 fw-bold me-auto">Database connections</span>
           <button
             className="btn btn-primary"
@@ -42,6 +46,7 @@ export function Database() {
           }}
         ></NewDatabaseModal>
       )}
+         */}
     </>
   );
 }

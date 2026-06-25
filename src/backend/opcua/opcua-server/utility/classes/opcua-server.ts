@@ -125,15 +125,15 @@ export class OpcuaServer {
       browseName: "log4plc",
     });
 
-    this.config.namespaces.forEach((namespace) => {
+    this.config.namespaces?.forEach((namespace) => {
       const registeredNamespace = this.getNamespace(addressSpace, namespace);
-      namespace.objects.forEach((object) => {
+      namespace.objects?.forEach((object) => {
         console.log(object);
         const device = this.getObject(registeredNamespace, folder, {
           name: object.name,
         });
 
-        object.methods.forEach((method) => {
+        object.methods?.forEach((method) => {
           return this.getMethod(method, rootNamespace, device, method.name);
         });
       });
@@ -161,7 +161,7 @@ export class OpcuaServer {
   ) {
     const methodO = namespace.addMethod(object, {
       browseName: name,
-      inputArguments: method.inputArguments.map((input) => {
+      inputArguments: method.inputArguments?.map((input) => {
         return this.getInputArgument(input);
       }),
       outputArguments: [

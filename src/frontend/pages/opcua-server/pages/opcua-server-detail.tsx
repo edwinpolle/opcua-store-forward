@@ -172,15 +172,6 @@ export function OpcuaServerDetail() {
                 </button>
               </div>
               <hr className="divider m-0"></hr>
-              {/** 
-            <div className="p-2">
-              <input
-                className="form-control"
-                placeholder="Type to search..."
-              ></input>
-            </div>
-            <hr className="divider m-0"></hr>
-            */}
               <div className="flex-grow-1 d-flex overflow-auto">
                 <div className="flex-grow-1 d-flex flex-column gap-2 p-2 overflow-auto">
                   {namespaces &&

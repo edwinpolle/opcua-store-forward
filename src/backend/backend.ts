@@ -5,15 +5,11 @@ import { SqliteService } from "./db/sqlite/sqlite.service";
 import { OpcuaClientService } from "./opcua/opcua-client/opcua-client.service";
 import { OpcuaServerUtilityService } from "./opcua/opcua-server/opcua-server-utility.service";
 import { OpcuaServerService } from "./opcua/opcua-server/opcua-server.service";
-import { Settings } from "./settings/settings";
+import { SettingService } from "./settings/settings.service";
 import { container } from "tsyringe";
 
 export default class Backend {
-  settings: Settings;
-
   constructor() {
-    this.settings = new Settings();
-
     this.registerServices();
 
     this.registerHelpers();
@@ -26,6 +22,7 @@ export default class Backend {
     container.resolve(MySQLService);
     container.resolve(MsSQLService);
     container.resolve(OpcuaServerUtilityService);
+    container.resolve(SettingService);
   }
 
   registerHelpers() {

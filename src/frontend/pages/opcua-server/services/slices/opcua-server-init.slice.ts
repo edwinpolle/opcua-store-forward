@@ -19,24 +19,26 @@ export const createOpcuaServerInitSlice: StateCreator<
   init: (dto) => {
     get().clear();
 
-    set({ opcuaServer: dto });
+    const { namespaces, ...dtoFlat } = dto;
 
-    dto.namespaces.forEach((namespace) => {
-      const { objects, ...namespaceW } = namespace;
+    set({ opcuaServer: dtoFlat });
 
-      get().setNamespace({ ...namespaceW });
+    namespaces?.forEach((namespace) => {
+      const { objects, ...namespaceFlat } = namespace;
 
-      namespace.objects!.forEach((object) => {
-        const { methods, ...objectW } = object;
+      get().setNamespace({ ...namespaceFlat });
 
-        get().setObject({ ...objectW });
+      objects?.forEach((object) => {
+        const { methods, ...objectFlat } = object;
 
-        object.methods!.forEach((method) => {
-          const { inputArguments, ...methodW } = method;
+        get().setObject({ ...objectFlat });
 
-          get().setMethod({ ...methodW });
+        methods?.forEach((method) => {
+          const { inputArguments, ...methodFlat } = method;
 
-          method.inputArguments!.forEach((inputArgument) => {
+          get().setMethod({ ...methodFlat });
+
+          inputArguments?.forEach((inputArgument) => {
             get().setInputArgument(inputArgument);
           });
         });
