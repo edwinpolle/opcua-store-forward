@@ -11,6 +11,7 @@ import * as path from "path";
 import { OpcuaServerService } from "./opcua-server.service";
 import { UtilityToMainMessage } from "./utility/types/opcua-server-utility.types";
 import { OpcuaServerStatusDto } from "./dtos/opcua-server-status.dto";
+import { BROWSER_WINDOW_TOKEN } from "../../tokens/tokens";
 
 @singleton()
 export class OpcuaServerUtilityService {
@@ -22,8 +23,11 @@ export class OpcuaServerUtilityService {
   win: BrowserWindow | undefined;
 
   constructor(
+    @inject(BROWSER_WINDOW_TOKEN) window: BrowserWindow,
     @inject(OpcuaServerService) opcuaServerService: OpcuaServerService,
   ) {
+    this.win = window;
+
     this.servers = new Map();
 
     this.service = opcuaServerService;
@@ -163,6 +167,7 @@ export class OpcuaServerUtilityService {
     this.servers
       .get(id)
       ?.server.on("message", (message: UtilityToMainMessage) => {
+        console.log(message);
         switch (message.type) {
           case "SERVER_READY": {
             console.log(message);
