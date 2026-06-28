@@ -10,19 +10,30 @@ import { container } from "tsyringe";
 
 export default class Backend {
   constructor() {
-    this.registerServices();
+    this.initDataSource();
 
     this.registerHelpers();
+  }
+
+  async initDataSource() {
+    const service = container.resolve(SqliteService);
+
+    await service.initilizeDataSource();
+
+    this.registerServices();
   }
 
   registerServices() {
     container.resolve(OpcuaServerService);
     container.resolve(OpcuaClientService);
-    container.resolve(SqliteService);
     container.resolve(MySQLService);
     container.resolve(MsSQLService);
     container.resolve(OpcuaServerUtilityService);
     container.resolve(SettingService);
+
+    setTimeout(() => {
+      ipcMain.emit("backend-ready");
+    }, 5000);
   }
 
   registerHelpers() {

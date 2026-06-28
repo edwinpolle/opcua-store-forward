@@ -30,8 +30,6 @@ export class SqliteService {
         ...BufferEntities,
       ],
     });
-
-    this.initilizeDataSource();
   }
 
   async initilizeDataSource() {
@@ -54,6 +52,8 @@ export class SqliteService {
     };
 
     const exists = await repo.findOne({ where: { name: "Default" } });
+
+    console.log(exists);
 
     if (!exists) {
       await repo.save(defaultProfile);

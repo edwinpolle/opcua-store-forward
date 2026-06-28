@@ -32,6 +32,11 @@ const config: ForgeConfig = {
         config: rendererConfig,
         entryPoints: [
           {
+            html: "./src/splash/splash.html",
+            name: "splash_window",
+            js: "./src/splash/splash.ts",
+          },
+          {
             html: "./src/index.html",
             js: "./src/renderer.ts",
             name: "main_window",
