@@ -15,7 +15,7 @@ export function NewOpcuaNamespaceModal({ serverId, onClose, onSave }: Props) {
     handleSubmit,
     formState: { errors },
   } = useForm<CreateOpcuaServerNamespaceDto>({
-    defaultValues: { serverConfigId: serverId },
+    defaultValues: {},
     mode: "onSubmit",
   });
 
@@ -23,7 +23,7 @@ export function NewOpcuaNamespaceModal({ serverId, onClose, onSave }: Props) {
     createNamespace(dto);
 
   function createNamespace(dto: CreateOpcuaServerNamespaceDto) {
-    window.api.createOpcuaServerNamespace(dto).then((v) => {
+    window.api.createOpcuaServerNamespace(serverId, dto).then((v) => {
       if (v) {
         useNotifycationStore
           .getState()
@@ -65,6 +65,7 @@ export function NewOpcuaNamespaceModal({ serverId, onClose, onSave }: Props) {
                     className={`form-control ${errors.name ? "is-invalid" : ""}`}
                     autoFocus
                     {...register("name", { required: true })}
+                    placeholder="Namespace name"
                   ></input>
                   <div
                     className={`invalid-feedback ${errors.name ? "" : "d-none"}`}
@@ -85,11 +86,13 @@ export function NewOpcuaNamespaceModal({ serverId, onClose, onSave }: Props) {
                         message: "no valid url",
                       },
                     })}
+                    placeholder="https://log4plc.com/ua/example"
                   ></input>
                   <div
                     className={`invalid-feedback ${errors.url ? "" : "d-none"}`}
                   >
-                    Not valid url! It schould look like: https://log4plc.com/UA/
+                    Not valid url! It schould look like:
+                    https://log4plc.com/ua/example
                   </div>
                 </div>
               </form>

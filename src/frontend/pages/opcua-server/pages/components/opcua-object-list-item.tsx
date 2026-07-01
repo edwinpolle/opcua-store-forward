@@ -25,8 +25,13 @@ export function OpcuaObjectListItem({ id }: Props) {
     useTooltip,
   );
 
-  const { getMethodByObjectId, setObject, setMethod, updateMethod } =
-    useOpcuaServerBound();
+  const {
+    getObjectsByNamespaceId,
+    getMethodByObjectId,
+    setObject,
+    setMethod,
+    updateMethod,
+  } = useOpcuaServerBound();
 
   const object = useOpcuaServerBound((s) => s.getObjectById(id));
 
@@ -67,7 +72,7 @@ export function OpcuaObjectListItem({ id }: Props) {
 
           <button
             ref={orderButtonRef}
-            className="btn btn-warning"
+            className={`btn btn-warning ${getMethodByObjectId(id).length === 0 ? "disabled" : ""}`}
             data-bs-toogle="tooltip"
             data-bs-placement="top"
             title="Order Methods"
@@ -116,6 +121,7 @@ export function OpcuaObjectListItem({ id }: Props) {
       {showNewModal && (
         <NewOpcuaMethodModal
           objectId={id}
+          order={getObjectsByNamespaceId(id).length + 1}
           onClose={() => {
             setNewModal(false);
           }}

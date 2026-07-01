@@ -24,8 +24,8 @@ export function EditOpcuaInputArgumentModal({
     watch,
     handleSubmit,
     setValue,
-    formState: { errors },
-  } = useForm<OpcuaServerInputArgumentDto>({
+    formState: { errors, dirtyFields },
+  } = useForm<UpdateOpcuaServerInputArgumentDto>({
     defaultValues: {
       name: data.name,
       dataType: data.dataType,
@@ -34,30 +34,40 @@ export function EditOpcuaInputArgumentModal({
     mode: "onBlur",
   });
 
-  const onSubmit: SubmitHandler<UpdateOpcuaServerInputArgumentDto> = (data) =>
-    updateInputArgument(data);
+  const onSubmit: SubmitHandler<UpdateOpcuaServerInputArgumentDto> = (subDto) =>
+    updateInputArgument(subDto);
 
-  function updateInputArgument(dto: UpdateOpcuaServerInputArgumentDto) {
-    window.api.updateOpcuaServerInputArgument(data.id, dto).then((v) => {
-      if (v) {
-        useNotifycationStore
-          .getState()
-          .show(
-            "OPC UA Server",
-            `Input Argument ${v.name} updated!`,
-            "success",
-          );
-        onUpdate(v);
-        onClose();
-      } else {
-        useNotifycationStore
-          .getState()
-          .show(
-            "OPC UA Server",
-            `Input Argument ${data.name} can not be updated!`,
-          );
-      }
-    });
+  function updateInputArgument(subDto: UpdateOpcuaServerInputArgumentDto) {
+    const dto = (
+      Object.keys(dirtyFields) as Array<keyof UpdateOpcuaServerInputArgumentDto>
+    ).reduce<UpdateOpcuaServerInputArgumentDto>((acc, key) => {
+      (acc as any)[key] = subDto[key];
+
+      return acc;
+    }, {});
+
+    window.api
+      .updateOpcuaServerInputArgument(data.id, { ...subDto })
+      .then((v) => {
+        if (v) {
+          useNotifycationStore
+            .getState()
+            .show(
+              "OPC UA Server",
+              `Input Argument ${v.name} updated!`,
+              "success",
+            );
+          onUpdate(v);
+          onClose();
+        } else {
+          useNotifycationStore
+            .getState()
+            .show(
+              "OPC UA Server",
+              `Input Argument ${data.name} can not be updated!`,
+            );
+        }
+      });
   }
 
   const [showDeleteModal, setDeleteModal] = useState<boolean>(false);

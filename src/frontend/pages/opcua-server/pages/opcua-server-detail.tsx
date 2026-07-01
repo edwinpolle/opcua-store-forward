@@ -61,7 +61,6 @@ export function OpcuaServerDetail() {
     if (!opcuaServerId) return;
 
     window.api.getOpcuaServerById(opcuaServerId).then((data) => {
-      console.log(data);
       init(data);
     });
   }, [opcuaServerId, init]);

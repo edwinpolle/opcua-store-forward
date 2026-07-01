@@ -167,10 +167,8 @@ export class OpcuaServerUtilityService {
     this.servers
       .get(id)
       ?.server.on("message", (message: UtilityToMainMessage) => {
-        console.log(message);
         switch (message.type) {
           case "SERVER_READY": {
-            console.log(message);
             console.log("Server Ready");
             break;
           }

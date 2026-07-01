@@ -19,27 +19,29 @@ export const createOpcuaServerInitSlice: StateCreator<
   init: (dto) => {
     get().clear();
 
-    const { namespaces, ...dtoFlat } = dto;
+    set({ opcuaServer: dto });
 
-    set({ opcuaServer: dtoFlat });
+    window.api.getOpcuaServerNamespacesByServerId(dto.id).then((namespaces) => {
+      namespaces.forEach((n) => {
+        get().setNamespace(n);
 
-    namespaces?.forEach((namespace) => {
-      const { objects, ...namespaceFlat } = namespace;
+        window.api.getOpcuaServerObjectsByNamespaceId(n.id).then((objects) => {
+          objects.forEach((o) => {
+            get().setObject(o);
 
-      get().setNamespace({ ...namespaceFlat });
+            window.api.getOpcuaServerMethodsByObjectId(o.id).then((methods) => {
+              methods.forEach((m) => {
+                get().setMethod(m);
 
-      objects?.forEach((object) => {
-        const { methods, ...objectFlat } = object;
-
-        get().setObject({ ...objectFlat });
-
-        methods?.forEach((method) => {
-          const { inputArguments, ...methodFlat } = method;
-
-          get().setMethod({ ...methodFlat });
-
-          inputArguments?.forEach((inputArgument) => {
-            get().setInputArgument(inputArgument);
+                window.api
+                  .getOpcuaServerInputArgumentsByObejectId(m.id)
+                  .then((inputArgumets) => {
+                    inputArgumets.forEach((i) => {
+                      get().setInputArgument(i);
+                    });
+                  });
+              });
+            });
           });
         });
       });

@@ -47,12 +47,10 @@ export const useNotifycationStore = create<NotificationState>((set, get) => ({
       get().remove(id);
     }, 3000);
 
-    console.log(message, variant);
   },
   remove: (id) => {
     set((state) => ({
       notifycations: state.notifycations.filter((n) => n.id !== id),
     }));
-    console.log(id);
   },
 }));

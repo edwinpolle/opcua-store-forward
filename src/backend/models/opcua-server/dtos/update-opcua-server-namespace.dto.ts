@@ -1,4 +1,4 @@
 export interface UpdateOpcuaServerNamespaceDto {
-  name: string;
-  url: string;
+  name?: string;
+  url?: string;
 }

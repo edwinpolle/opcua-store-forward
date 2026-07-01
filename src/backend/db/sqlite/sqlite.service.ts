@@ -7,7 +7,7 @@ import { MySQLConfig } from "../mysql/models/mysql.entity";
 import { OpcuaServerEntities } from "../../models/opcua-server/opcua-server-entities";
 import { BufferEntities } from "../../models/buffer/buffer-entities";
 import { SettingsEntities } from "../../models/settings/settings-entities";
-import { SettingsProfileDto } from "../../models/settings/dtos/settings.dto";
+import { SettingsProfileDto } from "../../models/settings/dtos/settings-profile.dto";
 import { CreateSettingsProfile } from "../../models/settings/dtos/create-settings-profile.dto";
 import { SettingsProfile } from "../../models/settings/settings-profile.entity";
 

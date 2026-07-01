@@ -16,6 +16,7 @@ import { UpdateOpcuaServerObjectDto } from "../../models/opcua-server/dtos/updat
 import { UpdateOpcuaServerMethodDto } from "../../models/opcua-server/dtos/update-opcua-server-method.dto";
 import { UpdateOpcuaServerInputArgumentDto } from "../../models/opcua-server/dtos/update-opcua-server-input-argument.dto";
 import { UpdateOpcuaServerDto } from "../../models/opcua-server/dtos/update-opcua-server.dto";
+import { CreateOpcuaServerInputArgumentDto } from "src/backend/models/opcua-server/dtos/create-opcua-server-input-argument.dto";
 
 @singleton()
 export class OpcuaServerService {
@@ -74,19 +75,31 @@ export class OpcuaServerService {
     });
 
     ipcMain.handle("getOpcuaServerById", async (_, id: string) => {
-      console.log(id);
       return this.configRepo.findOne({
         where: { id: id },
-        relations: {
-          namespaces: { objects: { methods: { inputArguments: true } } },
-        },
       });
     });
 
     ipcMain.handle(
+      "getOpcuaServerNamespacesByServerId",
+      async (_, id: string) => {
+        return this.namespaceRepo.find({ where: { serverConfigId: id } });
+      },
+    );
+
+    ipcMain.handle(
       "createOpcuaServerNamespace",
-      async (_, dto: CreateOpcuaServerNamespaceDto) => {
-        const result = await this.namespaceRepo.insert(dto);
+      async (
+        _,
+        {
+          serverId,
+          dto,
+        }: { serverId: string; dto: CreateOpcuaServerNamespaceDto },
+      ) => {
+        const result = await this.namespaceRepo.insert({
+          serverConfigId: serverId,
+          ...dto,
+        });
 
         if (result.identifiers.length > 0) {
           const namespace = await this.namespaceRepo.findOne({
@@ -106,7 +119,6 @@ export class OpcuaServerService {
         _,
         { id, dto }: { id: string; dto: UpdateOpcuaServerNamespaceDto },
       ) => {
-        console.log(id, dto);
 
         const result = await this.namespaceRepo.update({ id: id }, { ...dto });
 
@@ -125,9 +137,25 @@ export class OpcuaServerService {
     });
 
     ipcMain.handle(
+      "getOpcuaServerObjectsByNamespaceId",
+      async (_, id: string) => {
+        return this.objectRepo.find({ where: { namespaceId: id } });
+      },
+    );
+
+    ipcMain.handle(
       "createOpcuaServerObject",
-      async (_, dto: CreateOpcuaServerObjectDto) => {
-        const result = await this.objectRepo.insert(dto);
+      async (
+        _,
+        {
+          namespaceId,
+          dto,
+        }: { namespaceId: string; dto: CreateOpcuaServerObjectDto },
+      ) => {
+        const result = await this.objectRepo.insert({
+          namespaceId: namespaceId,
+          ...dto,
+        });
 
         if (result.identifiers.length > 0) {
           const object = await this.objectRepo.findOne({
@@ -163,10 +191,23 @@ export class OpcuaServerService {
       return false;
     });
 
+    ipcMain.handle("getOpcuaServerMethodsByObjectId", async (_, id: string) => {
+      return this.methodrepo.find({ where: { objectId: id } });
+    });
+
     ipcMain.handle(
       "createOpcuaServerMethod",
-      async (_, dto: CreateOpcuaServerMethodDto) => {
-        const result = await this.methodrepo.insert(dto);
+      async (
+        _,
+        {
+          objectId,
+          dto,
+        }: { objectId: string; dto: CreateOpcuaServerMethodDto },
+      ) => {
+        const result = await this.methodrepo.insert({
+          objectId: objectId,
+          ...dto,
+        });
 
         if (result.identifiers.length > 0) {
           const method = await this.methodrepo.findOne({
@@ -202,19 +243,38 @@ export class OpcuaServerService {
       return false;
     });
 
-    ipcMain.handle("createOpcuaServerInputArgument", async (_, dto) => {
-      const result = await this.inputArgumentRepo.insert(dto);
+    ipcMain.handle(
+      "getOpcuaServerInputArgumentsByObejectId",
+      async (_, id: string) => {
+        return this.inputArgumentRepo.find({ where: { methodId: id } });
+      },
+    );
 
-      if (result.identifiers.length > 0) {
-        const argument = await this.inputArgumentRepo.findOne({
-          where: { id: result.identifiers[0].id },
+    ipcMain.handle(
+      "createOpcuaServerInputArgument",
+      async (
+        _,
+        {
+          methodId,
+          dto,
+        }: { methodId: string; dto: CreateOpcuaServerInputArgumentDto },
+      ) => {
+        const result = await this.inputArgumentRepo.insert({
+          methodId: methodId,
+          ...dto,
         });
 
-        return argument;
-      }
+        if (result.identifiers.length > 0) {
+          const argument = await this.inputArgumentRepo.findOne({
+            where: { id: result.identifiers[0].id },
+          });
 
-      return false;
-    });
+          return argument;
+        }
+
+        return false;
+      },
+    );
 
     ipcMain.handle(
       "updateOpcuaServerInputArgument",

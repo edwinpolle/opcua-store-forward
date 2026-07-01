@@ -17,16 +17,28 @@ export function EditOpcuaMethodModal({ data, onClose, onUpdate }: Props) {
     register,
     watch,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm<UpdateOpcuaServerMethodDto>({
-    defaultValues: { name: data.name, description: data.description },
+    defaultValues: {
+      name: data.name,
+      description: data.description,
+      order: data.order,
+    },
     mode: "onBlur",
   });
 
-  const onSubmit: SubmitHandler<UpdateOpcuaServerMethodDto> = (data) =>
-    updateMethod(data);
+  const onSubmit: SubmitHandler<UpdateOpcuaServerMethodDto> = (subDto) =>
+    updateMethod(subDto);
 
-  function updateMethod(dto: UpdateOpcuaServerMethodDto) {
+  function updateMethod(subDto: UpdateOpcuaServerMethodDto) {
+    const dto = (
+      Object.keys(dirtyFields) as Array<keyof UpdateOpcuaServerMethodDto>
+    ).reduce<UpdateOpcuaServerMethodDto>((acc, key) => {
+      (acc as any)[key] = subDto[key];
+
+      return acc;
+    }, {});
+
     window.api.updateOpcuaServerMethod(data.id, dto).then((v) => {
       if (v) {
         useNotifycationStore
@@ -131,7 +143,7 @@ export function EditOpcuaMethodModal({ data, onClose, onUpdate }: Props) {
           </div>
         </div>
       </div>
-      
+
       {showDeleteModal && (
         <DeleteOpcuaItemModal
           data={data.name}

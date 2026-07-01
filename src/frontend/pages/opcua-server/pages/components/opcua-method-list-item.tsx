@@ -73,7 +73,7 @@ export function OpcuaMethodListItem({ id }: Props) {
 
           <button
             ref={orderButtonRef}
-            className="btn btn-info"
+            className={`btn btn-info ${getInputArgumetsByMethodId(id).length === 0 ? "disabled" : ""}`}
             data-bs-toogle="tooltip"
             data-bs-placement="top"
             title="Order Input Argument"

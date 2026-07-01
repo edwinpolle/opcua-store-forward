@@ -8,9 +8,16 @@ export interface ThemeSlice {
   initTheme: () => Promise<void>;
 }
 
-export const createThemeSlice: StateCreator<SettingsStore, [], [], ThemeSlice> = (set) => ({
+export const createThemeSlice: StateCreator<
+  SettingsStore,
+  [],
+  [],
+  ThemeSlice
+> = (set) => ({
   theme: "light",
   updateTheme: async (value: "light" | "dark") => {
+    document.documentElement.setAttribute("data-bs-theme", value);
+
     const result = await window.api.setTheme(value);
     if (result) {
       set({ theme: value });

@@ -6,17 +6,23 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 type Props = {
   namespaceId: string;
+  order: number;
   onClose: () => void;
   onSave: (dto: OpcuaServerObjectDto) => void;
 };
 
-export function NewOpcuaObjectModal({ namespaceId, onClose, onSave }: Props) {
+export function NewOpcuaObjectModal({
+  namespaceId,
+  order,
+  onClose,
+  onSave,
+}: Props) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<CreateOpcuaServerObjectDto>({
-    defaultValues: { namespaceId: namespaceId },
+    defaultValues: { name: "Name", object: "Object", order: order },
     mode: "onSubmit",
   });
 
@@ -24,7 +30,7 @@ export function NewOpcuaObjectModal({ namespaceId, onClose, onSave }: Props) {
     createObject(dto);
 
   function createObject(dto: CreateOpcuaServerObjectDto) {
-    window.api.createOpcuaServerObject(dto).then((v) => {
+    window.api.createOpcuaServerObject(namespaceId, dto).then((v) => {
       if (v) {
         useNotifycationStore
           .getState()
@@ -63,6 +69,7 @@ export function NewOpcuaObjectModal({ namespaceId, onClose, onSave }: Props) {
                     className={`form-control ${errors.name ? "is-invalid" : ""}`}
                     autoFocus
                     {...register("name", { required: true })}
+                    placeholder="Object name"
                   ></input>
                   <div
                     className={`invalid-feedback ${errors.name ? "" : "d-none"}`}
@@ -75,6 +82,7 @@ export function NewOpcuaObjectModal({ namespaceId, onClose, onSave }: Props) {
                   <input
                     className={`form-control ${errors.object ? "is-invalid" : ""}`}
                     {...register("object", { required: true })}
+                    placeholder="Description"
                   ></input>
                   <div
                     className={`invalid-feedback ${errors.object ? "" : "d-none"}`}

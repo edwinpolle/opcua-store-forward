@@ -48,7 +48,7 @@ export function OrderOpcuaMethodModal({ data, onClose, onUpdate }: Props) {
       transform: CSS.Transform.toString(transform),
       transition,
       cursor: isDragging ? "grabbing" : "grab",
-      zIndex: isDragging ? 1050 : "auto", // Sorgt dafür, dass das gezogene Item oben schwebt
+      zIndex: isDragging ? 1050 : "auto",
     };
 
     return (
@@ -67,9 +67,11 @@ export function OrderOpcuaMethodModal({ data, onClose, onUpdate }: Props) {
 
   function updateMethod() {
     items.forEach((v) => {
-      window.api.updateOpcuaServerMethod(v.id, v).then((result) => {
-        onUpdate(result);
-      });
+      window.api
+        .updateOpcuaServerMethod(v.id, { order: v.order })
+        .then((result) => {
+          onUpdate(result);
+        });
     });
 
     onClose();

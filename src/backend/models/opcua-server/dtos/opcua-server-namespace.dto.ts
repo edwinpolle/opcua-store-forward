@@ -6,6 +6,5 @@ export interface OpcuaServerNamespaceDto {
   url: string;
   createAt: Date;
   updateAt: Date;
-  objects?: OpcuaServerObjectDto[];
   serverConfigId: string;
 }

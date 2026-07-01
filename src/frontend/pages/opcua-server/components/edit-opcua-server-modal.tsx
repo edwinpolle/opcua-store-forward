@@ -42,7 +42,6 @@ export function EditOpcuaServerModal({ data, onClose, onUpdate }: Props) {
         useNotifycationStore
           .getState()
           .show("OPC UA Server", `Server ${data.name} updated!`, "success");
-        console.log(v);
         updateOpcuaServer(v);
         onClose();
       } else {

@@ -38,7 +38,6 @@ process.parentPort.on("message", (event: MainMessageEvent) => {
 
   switch (message.type) {
     case "SET_CONFIG":
-      console.log(message.payload);
       setConfig(message.payload.config);
       break;
     case "START_SERVER":

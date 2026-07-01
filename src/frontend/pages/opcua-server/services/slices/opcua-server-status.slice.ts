@@ -33,7 +33,6 @@ export const createOpcuaServerStatusSlice: StateCreator<
   },
   getLastStatus: () => {
     window.api.getOpcuaServerStatus().then((data) => {
-      console.log(data);
       const stats = new Map(get().servers);
       data.forEach((v) => {
         stats.set(v.id, v);

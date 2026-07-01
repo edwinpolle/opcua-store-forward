@@ -19,15 +19,13 @@ export function Layout() {
 
   useEffect(() => {
     initStatus();
-    init();
-  }, [initStatus, init]);
+  }, [initStatus]);
 
   const [theme, setTheme] = useState("dark");
 
   useEffect(() => {
     document.documentElement.setAttribute("data-bs-theme", theme);
-    init();
-  }, [theme, init]);
+  }, [theme]);
 
   if (!initilized) {
     return (

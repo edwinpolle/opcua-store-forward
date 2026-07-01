@@ -6,17 +6,27 @@ import { SubmitHandler, useForm } from "react-hook-form";
 
 type Props = {
   objectId: string;
+  order: number;
   onClose: () => void;
   onSave: (dto: OpcuaServerMethodDto) => void;
 };
 
-export function NewOpcuaMethodModal({ objectId, onClose, onSave }: Props) {
+export function NewOpcuaMethodModal({
+  objectId,
+  order,
+  onClose,
+  onSave,
+}: Props) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<CreateOpcuaServerMethodDto>({
-    defaultValues: { objectId: objectId },
+    defaultValues: {
+      name: "New Method",
+      description: "Description",
+      order: order,
+    },
     mode: "onSubmit",
   });
 
@@ -24,7 +34,7 @@ export function NewOpcuaMethodModal({ objectId, onClose, onSave }: Props) {
     createMethod(dto);
 
   function createMethod(dto: CreateOpcuaServerMethodDto) {
-    window.api.createOpcuaServerMethod(dto).then((v) => {
+    window.api.createOpcuaServerMethod(objectId, dto).then((v) => {
       if (v) {
         useNotifycationStore
           .getState()

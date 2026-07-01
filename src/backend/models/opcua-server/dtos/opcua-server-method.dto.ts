@@ -7,6 +7,5 @@ export interface OpcuaServerMethodDto {
   order: number;
   createAt: Date;
   updateAt: Date;
-  inputArguments?: OpcuaServerInputArgumentDto[];
   objectId: string;
 }

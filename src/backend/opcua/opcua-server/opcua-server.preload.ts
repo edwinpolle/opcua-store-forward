@@ -32,10 +32,15 @@ export const opcuaServerPreloads = {
   /**
    * Namespace
    */
+  getOpcuaServerNamespacesByServerId: (
+    id: string,
+  ): Promise<OpcuaServerNamespaceDto[]> =>
+    ipcRenderer.invoke("getOpcuaServerNamespacesByServerId", id),
   createOpcuaServerNamespace: (
+    serverId: string,
     dto: CreateOpcuaServerNamespaceDto,
   ): Promise<OpcuaServerNamespaceDto | false> =>
-    ipcRenderer.invoke("createOpcuaServerNamespace", dto),
+    ipcRenderer.invoke("createOpcuaServerNamespace", { serverId, dto }),
   updateOpcuaServerNamespace: (
     id: string,
     dto: UpdateOpcuaServerNamespaceDto,
@@ -47,10 +52,15 @@ export const opcuaServerPreloads = {
   /**
    * Object
    */
+  getOpcuaServerObjectsByNamespaceId: (
+    id: string,
+  ): Promise<OpcuaServerObjectDto[]> =>
+    ipcRenderer.invoke("getOpcuaServerObjectsByNamespaceId", id),
   createOpcuaServerObject: (
+    namespaceId: string,
     dto: CreateOpcuaServerObjectDto,
   ): Promise<OpcuaServerObjectDto | false> =>
-    ipcRenderer.invoke("createOpcuaServerObject", dto),
+    ipcRenderer.invoke("createOpcuaServerObject", { namespaceId, dto }),
   updateOpcuaServerObject: (
     id: string,
     dto: UpdateOpcuaServerObjectDto,
@@ -61,10 +71,15 @@ export const opcuaServerPreloads = {
   /**
    * Method
    */
+  getOpcuaServerMethodsByObjectId: (
+    id: string,
+  ): Promise<OpcuaServerMethodDto[]> =>
+    ipcRenderer.invoke("getOpcuaServerMethodsByObjectId", id),
   createOpcuaServerMethod: (
+    objectId: string,
     dto: CreateOpcuaServerMethodDto,
   ): Promise<OpcuaServerMethodDto | false> =>
-    ipcRenderer.invoke("createOpcuaServerMethod", dto),
+    ipcRenderer.invoke("createOpcuaServerMethod", { objectId, dto }),
   updateOpcuaServerMethod: (
     id: string,
     dto: UpdateOpcuaServerMethodDto,
@@ -75,10 +90,15 @@ export const opcuaServerPreloads = {
   /**
    * Input Argument
    */
+  getOpcuaServerInputArgumentsByObejectId: (
+    id: string,
+  ): Promise<OpcuaServerInputArgumentDto[]> =>
+    ipcRenderer.invoke("getOpcuaServerInputArgumentsByObejectId", id),
   createOpcuaServerInputArgument: (
+    methodId: string,
     dto: CreateOpcuaServerInputArgumentDto,
   ): Promise<OpcuaServerInputArgumentDto | false> =>
-    ipcRenderer.invoke("createOpcuaServerInputArgument", dto),
+    ipcRenderer.invoke("createOpcuaServerInputArgument", { methodId, dto }),
   updateOpcuaServerInputArgument: (
     id: string,
     dto: OpcuaServerInputArgumentDto,

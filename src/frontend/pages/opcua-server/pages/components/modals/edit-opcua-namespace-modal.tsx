@@ -4,6 +4,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useState } from "react";
 import { useOpcuaServerBound } from "../../../services/opcua-server.service";
 import { DeleteOpcuaItemModal } from "./delete-opcua-item-modal";
+import { UpdateOpcuaServerNamespaceDto } from "src/backend/models/opcua-server/dtos/update-opcua-server-namespace.dto";
 
 type Props = {
   data: OpcuaServerNamespaceDto;
@@ -16,16 +17,24 @@ export function EditOpcuaNamespaceModal({ data, onClose, onUpdate }: Props) {
     register,
     watch,
     handleSubmit,
-    formState: { errors },
-  } = useForm<OpcuaServerNamespaceDto>({
+    formState: { errors, dirtyFields },
+  } = useForm<UpdateOpcuaServerNamespaceDto>({
     defaultValues: { name: data.name, url: data.url },
     mode: "onBlur",
   });
 
-  const onSubmit: SubmitHandler<OpcuaServerNamespaceDto> = (data) =>
-    updateNamespace(data);
+  const onSubmit: SubmitHandler<UpdateOpcuaServerNamespaceDto> = (subDto) =>
+    updateNamespace(subDto);
 
-  function updateNamespace(dto: OpcuaServerNamespaceDto) {
+  function updateNamespace(subDto: UpdateOpcuaServerNamespaceDto) {
+    const dto = (
+      Object.keys(dirtyFields) as Array<keyof UpdateOpcuaServerNamespaceDto>
+    ).reduce<UpdateOpcuaServerNamespaceDto>((acc, key) => {
+      acc[key] = subDto[key];
+
+      return acc;
+    }, {});
+
     window.api.updateOpcuaServerNamespace(data.id, dto).then((v) => {
       if (v) {
         useNotifycationStore

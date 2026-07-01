@@ -8,7 +8,6 @@ import { settingsPreload } from "./backend/settings/settings.preload";
 
 contextBridge.exposeInMainWorld("api", {
   openExternalLink: (url: string) => ipcRenderer.send("openExternalLink", url),
-
   ...settingsPreload,
   ...opcuaServerPreloads,
   ...opcuaServerUtilityPreloads,

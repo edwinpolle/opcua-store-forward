@@ -4,6 +4,7 @@ import { NewOpcuaObjectModal } from "./modals/new-opcua-object-modal";
 import { EditOpcuaNamespaceModal } from "./modals/edit-opcua-namespace-modal";
 import { useOpcuaServerBound } from "../../services/opcua-server.service";
 import { useTooltip } from "../../../../helper/tooltip-helper";
+import { OrderOpcuaObjectModal } from "./modals/order-opcua-object-modal";
 
 type Props = {
   id: string;
@@ -11,20 +12,22 @@ type Props = {
 
 export function OpcuaNamespaceListItem({ id }: Props) {
   const [showNewObjectModal, setNewObjectModal] = useState<boolean>(false);
-
   const [showEditNamespaceModal, setEditNamespaceModal] =
+    useState<boolean>(false);
+  const [showReorderObjectModal, setReorderObjectModal] =
     useState<boolean>(false);
 
   const namespace = [...useOpcuaServerBound().namespaces.values()].find(
     (v) => v.id === id,
   );
 
-  const { getObjectsByNamespaceId, setNamespace, setObject } =
+  const { getObjectsByNamespaceId, setNamespace, setObject, updateObject } =
     useOpcuaServerBound();
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const inlineButtonRef = useRef<HTMLButtonElement | null>(null);
   const editButtonRef = useRef<HTMLButtonElement | null>(null);
+  const orderButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const handleExternalLink = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
@@ -35,7 +38,9 @@ export function OpcuaNamespaceListItem({ id }: Props) {
     window.api.openExternalLink(url);
   };
 
-  [buttonRef, inlineButtonRef, editButtonRef].forEach(useTooltip);
+  [buttonRef, inlineButtonRef, editButtonRef, orderButtonRef].forEach(
+    useTooltip,
+  );
 
   return (
     <>
@@ -84,6 +89,17 @@ export function OpcuaNamespaceListItem({ id }: Props) {
           >
             <i className="bi bi-plus"></i>
           </button>
+
+          <button
+            ref={orderButtonRef}
+            className={`btn btn-success ${getObjectsByNamespaceId(id).length === 0 ? "disabled" : ""}`}
+            data-bs-toogle="tooltip"
+            data-bs-placement="top"
+            title="Order Objects"
+            onClick={() => setReorderObjectModal(true)}
+          >
+            <i className="bi bi-list"></i>
+          </button>
         </div>
       </div>
       <hr className="divider mt-2 mb-2"></hr>
@@ -107,15 +123,17 @@ export function OpcuaNamespaceListItem({ id }: Props) {
           </ul>
         ) : (
           <ul className="list-group">
-            {getObjectsByNamespaceId(id).map((v) => (
-              <li
-                id={v.id}
-                key={v.id}
-                className="list-group-item list-group-item-success d-flex flex-column pt-2 pb-2 ps-2"
-              >
-                <OpcuaObjectListItem id={v.id}></OpcuaObjectListItem>
-              </li>
-            ))}
+            {getObjectsByNamespaceId(id)
+              .sort((a, b) => a.order - b.order)
+              .map((v) => (
+                <li
+                  id={v.id}
+                  key={v.id}
+                  className="list-group-item list-group-item-success d-flex flex-column pt-2 pb-2 ps-2"
+                >
+                  <OpcuaObjectListItem id={v.id}></OpcuaObjectListItem>
+                </li>
+              ))}
           </ul>
         )}
       </ul>
@@ -123,6 +141,7 @@ export function OpcuaNamespaceListItem({ id }: Props) {
       {showNewObjectModal && (
         <NewOpcuaObjectModal
           namespaceId={id}
+          order={getObjectsByNamespaceId(id).length + 1}
           onClose={() => setNewObjectModal(false)}
           onSave={(result) => setObject(result)}
         ></NewOpcuaObjectModal>
@@ -136,6 +155,16 @@ export function OpcuaNamespaceListItem({ id }: Props) {
             setNamespace(dto);
           }}
         ></EditOpcuaNamespaceModal>
+      )}
+
+      {showReorderObjectModal && namespace && (
+        <OrderOpcuaObjectModal
+          data={getObjectsByNamespaceId(namespace.id)}
+          onClose={() => setReorderObjectModal(false)}
+          onUpdate={(dto) => {
+            updateObject(dto);
+          }}
+        ></OrderOpcuaObjectModal>
       )}
     </>
   );

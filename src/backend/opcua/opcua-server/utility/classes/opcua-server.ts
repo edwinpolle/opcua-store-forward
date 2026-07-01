@@ -90,11 +90,9 @@ export class OpcuaServer {
 
   setServerListener() {
     this.server.on("create_session", (session) => {
-      console.log(session);
     });
 
     this.server.on("session_closed", (session) => {
-      console.log(session);
     });
 
     this.server.on("post_initialize", () => {
@@ -172,7 +170,6 @@ export class OpcuaServer {
         },
       ],
     });
-    console.log(methodO);
 
     this.setMethodBind(methodO);
 

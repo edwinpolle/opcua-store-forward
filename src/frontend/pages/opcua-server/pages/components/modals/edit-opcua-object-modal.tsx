@@ -17,17 +17,24 @@ export function EditOpcuaObjectModal({ data, onClose, onUpdate }: Props) {
     register,
     watch,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm<UpdateOpcuaServerObjectDto>({
     defaultValues: { name: data.name, object: data.object },
     mode: "onBlur",
   });
 
-  const onSubmit: SubmitHandler<UpdateOpcuaServerObjectDto> = (data) =>
-    updateObject(data);
+  const onSubmit: SubmitHandler<UpdateOpcuaServerObjectDto> = (subDto) =>
+    updateObject(subDto);
 
-  function updateObject(dto: UpdateOpcuaServerObjectDto) {
-    console.log(dto);
+  function updateObject(subDto: UpdateOpcuaServerObjectDto) {
+    const dto = (
+      Object.keys(dirtyFields) as Array<keyof UpdateOpcuaServerObjectDto>
+    ).reduce<UpdateOpcuaServerObjectDto>((acc, key) => {
+      (acc as any)[key] = subDto[key];
+
+      return acc;
+    }, {});
+
     window.api.updateOpcuaServerObject(data.id, dto).then((v) => {
       if (v) {
         useNotifycationStore

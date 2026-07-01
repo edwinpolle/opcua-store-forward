@@ -46,7 +46,11 @@ declare global {
       /**
        * Namespace
        */
+      getOpcuaServerNamespacesByServerId(
+        id: string,
+      ): Promise<OpcuaServerNamespaceDto[]>;
       createOpcuaServerNamespace(
+        serverId: string,
         dto: CreateOpcuaServerNamespaceDto,
       ): Promise<OpcuaServerNamespaceDto | false>;
       updateOpcuaServerNamespace(
@@ -57,7 +61,11 @@ declare global {
       /**
        * Object
        */
+      getOpcuaServerObjectsByNamespaceId(
+        id: string,
+      ): Promise<OpcuaServerObjectDto[]>;
       createOpcuaServerObject(
+        namespaceId: string,
         dto: CreateOpcuaServerObjectDto,
       ): Promise<OpcuaServerObjectDto | false>;
       updateOpcuaServerObject(
@@ -68,7 +76,11 @@ declare global {
       /**
        * Method
        */
+      getOpcuaServerMethodsByObjectId(
+        id: string,
+      ): Promise<OpcuaServerMethodDto[]>;
       createOpcuaServerMethod(
+        objectId: string,
         dto: CreateOpcuaServerMethodDto,
       ): Promise<OpcuaServerMethodDto | false>;
       updateOpcuaServerMethod(
@@ -79,7 +91,11 @@ declare global {
       /**
        * Input Argument
        */
+      getOpcuaServerInputArgumentsByObejectId(
+        id: string,
+      ): Promise<OpcuaServerInputArgumentDto[]>;
       createOpcuaServerInputArgument(
+        methodId: string,
         dto: CreateOpcuaServerInputArgumentDto,
       ): Promise<OpcuaServerInputArgumentDto | false>;
       updateOpcuaServerInputArgument(

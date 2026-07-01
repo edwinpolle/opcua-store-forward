@@ -3,7 +3,7 @@ import { inject, singleton } from "tsyringe";
 import { Repository } from "typeorm";
 import { SettingsProfile } from "../models/settings/settings-profile.entity";
 import { SqliteService } from "../db/sqlite/sqlite.service";
-import { SettingsProfileDto } from "../models/settings/dtos/settings.dto";
+import { SettingsProfileDto } from "../models/settings/dtos/settings-profile.dto";
 
 @singleton()
 export class SettingService {

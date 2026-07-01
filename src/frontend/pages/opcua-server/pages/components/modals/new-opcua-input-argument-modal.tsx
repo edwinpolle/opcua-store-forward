@@ -27,12 +27,11 @@ export function NewOpcuaInputArgumentModal({
     formState: { errors },
   } = useForm<CreateOpcuaServerInputArgumentDto>({
     defaultValues: {
-      methodId: methodId,
       name: "New input Argument",
       dataType: DATA_TYPE_OPTIONS[0].label,
       order: order,
     },
-    mode: "onBlur",
+    mode: "onSubmit",
   });
 
   const onSubmit: SubmitHandler<CreateOpcuaServerInputArgumentDto> = (data) => {
@@ -40,7 +39,7 @@ export function NewOpcuaInputArgumentModal({
   };
 
   function createInputArgument(dto: CreateOpcuaServerInputArgumentDto) {
-    window.api.createOpcuaServerInputArgument(dto).then((v) => {
+    window.api.createOpcuaServerInputArgument(methodId, dto).then((v) => {
       if (v) {
         useNotifycationStore
           .getState()

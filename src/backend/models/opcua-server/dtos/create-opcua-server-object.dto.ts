@@ -1,5 +1,5 @@
 export interface CreateOpcuaServerObjectDto {
-  namespaceId: string;
   name: string;
   object: string;
+  order: number;
 }

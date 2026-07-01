@@ -1,5 +1,5 @@
 import { StateCreator } from "zustand";
-import { SettingsProfileDto } from "../../../../backend/models/settings/dtos/settings.dto";
+import { SettingsProfileDto } from "../../../../backend/models/settings/dtos/settings-profile.dto";
 import { SettingsStore } from "./settings-service";
 
 export interface SettingsInitSlice {
